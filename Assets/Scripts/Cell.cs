@@ -1,39 +1,44 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Cell
+namespace Assets.Scripts
 {
-    private Vector2Int position;
-    private int value;
-
-    public event Action OnValueChanged;
-    public event Action OnPositionChanged;
-
-    public Vector2Int Position
+    public class Cell
     {
-        get => position;
-        set 
+        private Vector2Int position;
+        private int value;
+
+        public Action onValueChanged;
+        public Action onPositionChanged;
+
+        public Vector2Int Position
         {
-            if (position == value) return;
-            position = value;
-            OnPositionChanged?.Invoke();
+            get => position;
+            set
+            {
+                if (this.position == value) return;
+                this.position = value;
+                onPositionChanged.Invoke();
+            }
         }
-    }
 
-    public int Value
-    {
-        get => value;
-        set
+        public int Value
         {
-            if (this.value == value) return;
+            get => value;
+            set
+            {
+                if (this.value == value) return;
+                this.value = value;
+                onValueChanged.Invoke();
+            }
+        }
+
+        public Cell(Vector2Int position, int value)
+        {
+            this.position = position;
             this.value = value;
-            OnValueChanged?.Invoke();
+            
         }
-    }
-
-    public Cell(Vector2Int position, int value)
-    {
-        this.position = position;
-        this.value = value;
     }
 }

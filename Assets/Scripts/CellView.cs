@@ -1,33 +1,46 @@
 using TMPro;
 using UnityEngine;
 
-public class CellView : MonoBehaviour
+namespace Assets.Scripts
 {
-    public TextMeshProUGUI valueText;
-    private Cell cell;
-
-    public void Init(Cell cell)
+    public class CellView : MonoBehaviour
     {
-        this.cell = cell;
-        
-        cell.OnValueChanged += UpdateValue;
-        cell.OnPositionChanged += UpdatePosition;
-        
+        const float CellSize = 130.0f;
+        const float CellSpacing = 14.0f;
+        public TextMeshProUGUI valueText;
+        private Cell _cell;
 
-        UpdateValue();
-        UpdatePosition();
-    }
+        public void Init(Cell cell)
+        {
+            _cell = cell;
 
-    void UpdateValue()
-    {
-        int num = (int)Mathf.Pow(2, cell.Value);
-        valueText.text = num.ToString();
-    }
 
-    void UpdatePosition()
-    {
-        // Пример позиционирования в UI сетке
-        RectTransform rt = GetComponent<RectTransform>();
-        rt.anchoredPosition = new Vector2(cell.Position.x * 100, cell.Position.y * 100);
+            cell.onPositionChanged = UpdatePosition;
+            cell.onValueChanged = UpdateValue;
+
+            UpdateValue();
+            UpdatePosition();
+        }
+
+
+        void UpdateValue()
+        {
+            int num = (int)Mathf.Pow(2, _cell.Value);
+            valueText.text = num.ToString();
+        }
+
+        void UpdatePosition()
+        {
+            Debug.Log("UpdatePosition");
+            RectTransform rt = GetComponent<RectTransform>();
+
+            const float delta = CellSize + CellSpacing;
+            int x = _cell.Position.x - FieldConfig.FieldSize / 2;
+            int y = _cell.Position.y - FieldConfig.FieldSize / 2;
+            rt.anchoredPosition = new Vector2(
+                x * delta + delta / 2,
+                -y * delta - delta / 2
+            );
+        }
     }
 }
